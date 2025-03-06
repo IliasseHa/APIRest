@@ -14,12 +14,12 @@ db.init_app(app)
 class User(db.Document):
     username = db.StringField(required=True, unique=True)
     password = db.StringField(required=True)
-    is_admin = db.BooleanField(default=False)  # Ajout du rôle admin
+    is_admin = db.BooleanField(default=False)  
 
 class Order(db.Document):
     product = db.StringField(required=True)
     quantity = db.IntField(required=True)
-    user_id = db.ReferenceField(User, required=True)  # Lien avec l'utilisateur
+    user_id = db.ReferenceField(User, required=True) 
 
 
 def token_required(f):
@@ -76,14 +76,14 @@ def create_order(current_user):
     order = Order(
         product=data['product'],
         quantity=data['quantity'],
-        user_id=current_user  # L'utilisateur qui a créé la commande
+        user_id=current_user 
     )
     order.save()
     return jsonify({
         'id': str(order.id),
         'product': order.product,
         'quantity': order.quantity,
-        'user': str(current_user.id)  # Renvoie l'ID de l'utilisateur
+        'user': str(current_user.id) 
     }), 201
 
 @app.route('/orders', methods=['GET'])
@@ -92,7 +92,7 @@ def get_orders(current_user):
     if current_user.is_admin:
         orders = Order.objects()
     else:
-        orders = Order.objects(user_id=current_user)  # Un utilisateur voit seulement ses commandes
+        orders = Order.objects(user_id=current_user)  
     orders_list = []
     for order in orders:
         orders_list.append({
